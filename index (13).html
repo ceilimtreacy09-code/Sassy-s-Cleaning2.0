@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sassy's Cleaning — Console Internal Cleaning</title>
+<link rel="icon" type="image/jpeg" href="logo.jpg">
+<meta name="description" content="Professional Xbox & PlayStation internal cleaning in Dublin. Cut temperatures, reduce fan noise, remove dust buildup, and extend console life. DM to book.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --paper:#13161B;
+    --paper-2:#1B1F26;
+    --card:#181C22;
+    --ink:#ECEAE1;
+    --muted:#8B93A0;
+    --rust:#FF6A2C;
+    --moss:#35D0C0;
+    --line:#ECEAE1;
+    --line-soft:rgba(236,234,225,0.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(236,234,225,0.035) 0px, rgba(236,234,225,0.035) 1px, transparent 1px, transparent 3px);
+  }
+  h1,h2,h3,.display{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    letter-spacing:-0.01em;
+    text-transform:uppercase;
+  }
+  .mono{ font-family:'Space Mono',monospace; }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  ul{list-style:none;}
+  .wrap{ max-width:1120px; margin:0 auto; padding:0 24px; }
+  :focus-visible{ outline:3px solid var(--rust); outline-offset:2px; }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:var(--paper);
+    border-bottom:3px solid var(--ink);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px; max-width:1120px; margin:0 auto;
+  }
+  .logo{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:16px; letter-spacing:0; text-transform:uppercase;
+  }
+  nav ul{ display:flex; gap:28px; }
+  nav ul a{ font-size:13.5px; color:var(--ink); font-weight:600; position:relative; padding-bottom:2px; }
+  nav ul a:hover{ color:var(--rust); }
+  .nav-cta{
+    display:inline-block; background:var(--ink); color:var(--paper);
+    font-size:13px; font-weight:700; padding:10px 20px;
+    border:2px solid var(--ink);
+    text-transform:uppercase; letter-spacing:0.03em;
+    box-shadow:3px 3px 0 var(--rust);
+    transition:transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .nav-cta:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--rust); }
+  .nav-links{ display:flex; align-items:center; gap:28px; }
+  .menu-btn{ display:none; }
+
+  @media (max-width:760px){
+    .nav-links ul{ display:none; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding:60px 0 64px; position:relative; overflow:hidden; }
+  .hero-grid{
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:56px; align-items:center;
+    position:relative; z-index:1;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'Space Mono',monospace; font-size:12px; color:var(--paper);
+    text-transform:uppercase; letter-spacing:0.06em; margin-bottom:18px;
+    background:var(--moss); padding:5px 10px; border:1px solid var(--ink);
+    transform:rotate(-1deg);
+  }
+  .hero h1{ font-size:clamp(32px,5vw,52px); line-height:1.06; margin-bottom:20px; }
+  .hero h1 .accent{
+    color:var(--rust);
+  }
+  .hero p.lead{ font-size:16.5px; color:var(--muted); max-width:46ch; margin-bottom:30px; }
+  .hero-actions{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; padding:13px 24px;
+    font-size:14.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.02em;
+    transition:transform 0.12s ease, box-shadow 0.12s ease; border:2px solid var(--ink); cursor:pointer;
+    font-family:'Inter',sans-serif;
+  }
+  .btn-primary{ background:var(--rust); color:var(--paper); border-color:var(--ink); box-shadow:4px 4px 0 var(--moss); }
+  .btn-primary:hover{ transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--moss); }
+  .btn-ghost{ border-color:var(--ink); color:var(--ink); background:var(--card); box-shadow:4px 4px 0 var(--line-soft); }
+  .btn-ghost:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--line-soft); }
+
+  /* Inspection tag (hero signature graphic) */
+  .tag-card{
+    background:var(--card); border:2px solid var(--ink);
+    padding:26px; position:relative; overflow:hidden;
+    box-shadow:8px 8px 0 var(--moss);
+    transform:rotate(1.2deg);
+  }
+  .tag-card::after{
+    content:''; position:absolute; left:0; right:0; height:2px;
+    background:linear-gradient(90deg, transparent, var(--moss), transparent);
+    animation:scan 3.2s linear infinite;
+    opacity:0.6;
+  }
+  @keyframes scan{
+    0%{ top:0%; }
+    100%{ top:100%; }
+  }
+  .tag-card::before{
+    content:''; position:absolute; top:22px; left:-11px;
+    width:22px; height:22px; border-radius:50%;
+    background:var(--paper); border:2px solid var(--ink);
+  }
+  .tag-card .cap{
+    display:flex; justify-content:space-between;
+    font-family:'Space Mono',monospace; font-size:11px; color:var(--muted);
+    text-transform:uppercase; letter-spacing:0.05em; margin-bottom:16px;
+    border-bottom:1px dashed var(--line); padding-bottom:12px;
+  }
+  .thermal-readout{ display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:16px; }
+  .temp-block{ text-align:center; }
+  .temp-num{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:36px; line-height:1; }
+  .temp-num.hot{ color:var(--rust); }
+  .temp-num.cool{ color:var(--moss); }
+  .temp-label{ font-family:'Space Mono',monospace; font-size:10.5px; color:var(--muted); margin-top:6px; text-transform:uppercase; letter-spacing:0.04em; }
+  .thermal-arrow{ font-size:20px; color:var(--ink); padding-bottom:8px; }
+  .thermal-bar{
+    height:10px; overflow:hidden;
+    background:var(--paper-2); position:relative; margin-bottom:10px; border:1px solid var(--ink);
+  }
+  .thermal-bar-fill{
+    position:absolute; inset:0; width:38%;
+    background:repeating-linear-gradient(45deg, var(--rust), var(--rust) 6px, var(--moss) 6px, var(--moss) 12px);
+  }
+  .thermal-note{ font-size:12px; color:var(--muted); }
+  .tag-stamp{
+    position:absolute; top:-14px; right:18px;
+    background:var(--ink); color:var(--paper); font-family:'Space Mono',monospace;
+    font-size:10.5px; letter-spacing:0.06em; padding:5px 10px; text-transform:uppercase;
+    transform:rotate(4deg); border:1px solid var(--ink);
+  }
+
+  /* ---------- SECTION HEADS ---------- */
+  section{ padding:64px 0; border-top:3px solid var(--ink); }
+  .section-head{ max-width:640px; margin-bottom:40px; }
+  .section-head .eyebrow{ margin-bottom:14px; }
+  .section-head h2{ font-size:clamp(24px,3.4vw,34px); margin-bottom:12px; }
+  .section-head p{ color:var(--muted); font-size:15px; }
+
+  /* ---------- PRICING (ticket stubs) ---------- */
+  .tier-grid{ display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px; }
+  .tier-card{
+    background:var(--card); border:2px solid var(--ink);
+    padding:26px; position:relative;
+  }
+  .tier-card.new{ box-shadow:6px 6px 0 var(--rust); }
+  .tier-card.old{ box-shadow:6px 6px 0 var(--moss); }
+  .tier-tag{
+    font-family:'Space Mono',monospace; font-size:11px; text-transform:uppercase;
+    letter-spacing:0.06em; color:var(--paper); margin-bottom:10px; display:inline-block;
+    background:var(--ink); padding:4px 9px;
+  }
+  .tier-card h3{ font-size:19px; margin-bottom:6px; }
+  .tier-consoles{ font-size:13px; color:var(--muted); margin-bottom:18px; padding-bottom:16px; border-bottom:1px dashed var(--line); }
+  .tier-price{ display:flex; align-items:baseline; gap:6px; margin-bottom:20px; }
+  .tier-price .num{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:38px; }
+  .tier-card.new .num{ color:var(--rust); }
+  .tier-card.old .num{ color:var(--moss); }
+  .tier-price .per{ font-size:13px; color:var(--muted); font-family:'Space Mono',monospace; }
+  .tier-list{ display:flex; flex-direction:column; gap:10px; }
+  .tier-list li{ display:flex; gap:9px; font-size:14px; color:var(--ink); }
+  .tier-list li::before{ content:'✓'; color:var(--moss); font-weight:700; flex-shrink:0; }
+  .tier-card.new .tier-list li::before{ color:var(--rust); }
+
+  .addon-row{
+    display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
+    background:var(--paper-2); border:2px dashed var(--ink);
+    padding:20px 24px;
+  }
+  .addon-row .addon-label{ font-size:14.5px; }
+  .addon-row .addon-label strong{ display:block; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px; margin-bottom:4px; text-transform:uppercase; }
+  .addon-price{ font-family:'Space Mono',monospace; font-size:19px; color:var(--rust); white-space:nowrap; font-weight:700; }
+
+  /* ---------- ESTIMATOR (work order) ---------- */
+  .estimator{
+    background:var(--card); border:2px solid var(--ink);
+    padding:30px; display:grid; grid-template-columns:1fr 1fr; gap:0; align-items:stretch;
+    box-shadow:8px 8px 0 var(--line-soft);
+    position:relative;
+  }
+  .estimator > div:first-child{ padding-right:30px; border-right:2px dashed var(--line); }
+  .estimator > .estimate-panel{ padding-left:30px; }
+  .field{ margin-bottom:18px; }
+  .field label{
+    display:block; font-family:'Space Mono',monospace; font-size:11px; text-transform:uppercase;
+    letter-spacing:0.05em; color:var(--muted); margin-bottom:8px;
+  }
+  select, input[type=number]{
+    width:100%; background:var(--paper); border:2px solid var(--ink); color:var(--ink);
+    padding:11px 14px; font-size:15px; font-family:'Inter',sans-serif;
+  }
+  .qty-row{ display:flex; align-items:center; gap:12px; }
+  .qty-row input{ width:80px; text-align:center; }
+  .estimate-panel{
+    display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; gap:8px;
+  }
+  .estimate-label{ font-family:'Space Mono',monospace; font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; }
+  .estimate-total{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:44px; color:var(--rust); }
+  .estimate-sub{ font-size:12px; color:var(--muted); }
+
+  @media (max-width:760px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .tier-grid{ grid-template-columns:1fr; }
+    .estimator{ grid-template-columns:1fr; }
+    .estimator > div:first-child{ padding-right:0; border-right:none; border-bottom:2px dashed var(--line); padding-bottom:24px; margin-bottom:24px; }
+    .estimator > .estimate-panel{ padding-left:0; }
+  }
+
+  /* ---------- CONTACT ---------- */
+  .contact-layout{ display:grid; grid-template-columns:0.85fr 1fr; gap:48px; align-items:start; }
+
+  .touch-lead{ color:var(--muted); font-size:15px; margin:14px 0 24px; max-width:44ch; }
+  .touch-buttons{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:28px; }
+  .touch-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    border:2px solid var(--ink); background:var(--card);
+    padding:10px 16px; font-size:13.5px; font-weight:600;
+    box-shadow:3px 3px 0 var(--line-soft);
+    transition:transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  .touch-btn:hover{ transform:translate(-2px,-2px); box-shadow:5px 5px 0 var(--line-soft); color:var(--rust); }
+  .touch-btn .arrow{ font-size:12px; }
+  .touch-divider{ border-top:2px dashed var(--line); margin-bottom:24px; }
+  .touch-good-know{
+    font-family:'Space Mono',monospace; font-size:11px; color:var(--muted);
+    text-transform:uppercase; letter-spacing:0.06em; margin-bottom:16px;
+  }
+  .touch-list{ display:flex; flex-direction:column; gap:14px; }
+  .touch-list li{ display:flex; align-items:flex-start; gap:12px; font-size:14px; }
+  .touch-icon{ flex-shrink:0; color:var(--rust); margin-top:1px; }
+
+  .contact-card{
+    background:var(--card); border:2px solid var(--ink);
+    padding:28px; box-shadow:8px 8px 0 var(--moss);
+  }
+  .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .contact-grid .field-full{ grid-column:1 / -1; }
+  textarea{
+    width:100%; background:var(--paper); border:2px solid var(--ink); color:var(--ink);
+    padding:11px 14px; font-size:15px; font-family:'Inter',sans-serif;
+    resize:vertical; min-height:100px;
+  }
+  input[type=text], input[type=email]{
+    width:100%; background:var(--paper); border:2px solid var(--ink); color:var(--ink);
+    padding:11px 14px; font-size:15px; font-family:'Inter',sans-serif;
+  }
+  .contact-submit{ width:100%; justify-content:center; margin-top:6px; }
+  .contact-note{ font-size:12px; color:var(--muted); margin-top:14px; text-align:center; }
+  .form-status{
+    margin-top:16px; font-size:14px; padding:12px 14px;
+    background:var(--paper-2); border:2px solid var(--moss); color:var(--ink);
+    display:none;
+  }
+  .form-status.show{ display:block; }
+
+  @media (max-width:760px){
+    .contact-layout{ grid-template-columns:1fr; }
+  }
+  @media (max-width:600px){
+    .contact-grid{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{ border-top:3px solid var(--ink); padding:36px 0; }
+  .footer-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+  .footer-logo{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:13px; text-transform:uppercase; }
+  .footer-row .muted{ color:var(--muted); font-size:13px; font-family:'Space Mono',monospace; }
+  .footer-links a{ color:var(--muted); font-size:13px; }
+  .footer-links a:hover{ color:var(--rust); }
+
+</style>
+</head>
+<body>
+
+<div id="cookie-banner" style="display:none; position:fixed; left:0; right:0; bottom:0; z-index:9999; background:var(--card); border-top:2px solid var(--ink); padding:18px 20px; box-shadow:0 -6px 20px rgba(0,0,0,0.15); font-family:'Inter',sans-serif;">
+  <div style="max-width:900px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; gap:16px; justify-content:space-between;">
+    <p style="margin:0; color:var(--ink); font-size:14px; flex:1; min-width:220px;">
+      We use cookies for essential site function and, if you accept, to store your booking details. <a href="cookies.html" style="color:var(--rust);">Cookie Policy</a>
+    </p>
+    <div style="display:flex; gap:10px; flex-shrink:0;">
+      <button id="cookie-reject" class="btn" style="padding:8px 16px; border:1px solid var(--ink); background:transparent; color:var(--ink); border-radius:6px; cursor:pointer;">Reject</button>
+      <button id="cookie-accept" class="btn btn-primary" style="padding:8px 16px; border-radius:6px; cursor:pointer;">Accept all</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <nav>
+    <div class="logo">Sassy's Cleaning</div>
+    <div class="nav-links">
+      <ul>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#estimate">Get a price</a></li>
+        <li><a href="#how">How it works</a></li>
+      </ul>
+    </div>
+    <a href="#estimate" class="nav-cta">DM to book</a>
+  </nav>
+</header>
+
+<section class="hero" style="border-top:none;">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">Dublin · Console Servicing</span>
+        <h1>Your console runs hot.<br>We fix <span class="accent">that</span>.</h1>
+        <p class="lead">Full internal teardown, dust removal, and fan service for Xbox and PlayStation consoles. Quieter fans, cooler temps, longer console life.</p>
+        <div class="hero-actions">
+          <a href="#estimate" class="btn btn-primary">Get your price</a>
+          <a href="#pricing" class="btn btn-ghost">See what's included</a>
+        </div>
+      </div>
+      <div class="tag-card">
+        <div class="tag-stamp">Inspected</div>
+        <div class="cap">
+          <span>Before clean</span>
+          <span>After clean</span>
+        </div>
+        <div class="thermal-readout">
+          <div class="temp-block">
+            <div class="temp-num hot">92°</div>
+            <div class="temp-label">Dust-choked</div>
+          </div>
+          <div class="thermal-arrow">→</div>
+          <div class="temp-block">
+            <div class="temp-num cool">58°</div>
+            <div class="temp-label">Post-service</div>
+          </div>
+        </div>
+        <div class="thermal-bar"><div class="thermal-bar-fill"></div></div>
+        <div class="thermal-note mono">Typical CPU/GPU delta measured on a standard clean.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Pricing</span>
+      <h2>Two tiers. No surprises.</h2>
+      <p>Every clean is a full teardown, fan and heatsink service, and a rebuild-and-test before it goes back to you. What changes is the generation.</p>
+    </div>
+
+    <div class="tier-grid">
+      <div class="tier-card new">
+        <span class="tier-tag">New Gen</span>
+        <h3>Current-gen clean</h3>
+        <div class="tier-consoles">Xbox Series X/S · PlayStation 5</div>
+        <div class="tier-price"><span class="num">€50</span><span class="per">per console</span></div>
+        <ul class="tier-list">
+          <li>Full teardown &amp; rebuild</li>
+          <li>Fan + heatsink deep clean</li>
+          <li>Thermal paste replacement</li>
+          <li>Vent &amp; port clearing</li>
+          <li>Power-on &amp; noise test</li>
+        </ul>
+      </div>
+
+      <div class="tier-card old">
+        <span class="tier-tag">Old Gen</span>
+        <h3>Previous-gen clean</h3>
+        <div class="tier-consoles">Xbox One · PS4 / PS4 Pro</div>
+        <div class="tier-price"><span class="num">€25</span><span class="per">per console</span></div>
+        <ul class="tier-list">
+          <li>Full teardown &amp; rebuild</li>
+          <li>Fan + heatsink clean</li>
+          <li>Dust &amp; debris removal</li>
+          <li>Vent clearing</li>
+          <li>Power-on &amp; noise test</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="addon-row">
+      <div class="addon-label">
+        <strong>Controller deep clean</strong>
+        Stick drift check, grime removal, button + trigger service.
+      </div>
+      <div class="addon-price">+ €5 <span style="color:var(--muted); font-size:12px; font-family:'Inter',sans-serif;">/ controller</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="estimate">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Get a price</span>
+      <h2>Build your quote</h2>
+      <p>Pick your console and how many controllers you want cleaned alongside it.</p>
+    </div>
+
+    <div class="estimator">
+      <div>
+        <div class="field">
+          <label for="console-select">Console</label>
+          <select id="console-select">
+            <option value="0" disabled>Select one</option>
+            <option value="50">Xbox Series X/S — €50</option>
+            <option value="50">PS5 — €50</option>
+            <option value="25">Xbox One — €25</option>
+            <option value="25">PS4 / Pro — €25</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="controller-qty">Controllers to clean (€5 each)</label>
+          <div class="qty-row">
+            <input type="number" id="controller-qty" min="0" max="8" value="0">
+          </div>
+        </div>
+      </div>
+      <div class="estimate-panel">
+        <span class="estimate-label">Estimated total</span>
+        <div class="estimate-total mono" id="estimate-total">€0</div>
+        <span class="estimate-sub">DM this to book — final price confirmed on drop-off.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Process</span>
+      <h2>How it works</h2>
+    </div>
+    <div class="tier-grid">
+      <div class="tier-card old">
+        <span class="tier-tag">Drop-off</span>
+        <h3>DM to book</h3>
+        <div class="tier-consoles" style="border-bottom:none; padding-bottom:0;">Message your console, confirm price, arrange drop-off or pickup.</div>
+      </div>
+      <div class="tier-card old">
+        <span class="tier-tag">Turnaround</span>
+        <h3>Same-day service</h3>
+        <div class="tier-consoles" style="border-bottom:none; padding-bottom:0;">Full teardown, clean, rebuild, and a power-on test before it's returned.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-layout">
+      <div>
+        <span class="eyebrow">Get in touch</span>
+        <h2 style="font-size:clamp(22px,3vw,28px);">Book your clean</h2>
+        <p class="touch-lead">Fill in the form and it'll open a message ready to send — or reach out directly however suits you.</p>
+
+        <div class="touch-buttons">
+          <a class="touch-btn" href="https://instagram.com/direct/inbox" target="_blank" rel="noopener">Instagram DM <span class="arrow">↗</span></a>
+          <a class="touch-btn" href="https://wa.me/353857426962" target="_blank" rel="noopener">WhatsApp <span class="arrow">↗</span></a>
+          <a class="touch-btn" href="tel:+353857426962">Call/Text <span class="arrow">↗</span></a>
+        </div>
+
+        <div class="touch-divider"></div>
+
+        <div class="touch-good-know">Good to know</div>
+        <ul class="touch-list">
+          <li><span class="touch-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></span> Dublin area — drop-off &amp; collection arranged with you</li>
+          <li><span class="touch-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Payment: Cash or Revolut on collection</li>
+          <li><span class="touch-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span> sassydevicecleaning@gmail.com</li>
+          <li><span class="touch-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 2 .6 2.9a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.5 2.9.6a2 2 0 0 1 1.8 2z"/></svg></span> 085 742 6962</li>
+        </ul>
+      </div>
+
+      <form class="contact-card" id="contact-form">
+        <div class="contact-grid">
+          <div class="field">
+            <label for="cf-name">Name</label>
+            <input type="text" id="cf-name" name="name" placeholder="Your name" required>
+          </div>
+          <div class="field">
+            <label for="cf-console">Console</label>
+            <select id="cf-console" name="console" required>
+              <option value="" disabled selected>Select one</option>
+              <option value="Xbox Series X/S (€50)">Xbox Series X/S — €50</option>
+              <option value="PS5 (€50)">PS5 — €50</option>
+              <option value="Xbox One (€25)">Xbox One — €25</option>
+              <option value="PS4 / Pro (€25)">PS4 / Pro — €25</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="cf-controllers">Controllers to clean</label>
+            <input type="number" id="cf-controllers" name="controllers" min="0" max="8" value="0">
+          </div>
+          <div class="field">
+            <label for="cf-contact">Email or phone</label>
+            <input type="text" id="cf-contact" name="contact" placeholder="Best way to reach you" required>
+          </div>
+          <div class="field field-full">
+            <label for="cf-message">Notes</label>
+            <textarea id="cf-message" name="message" placeholder="Anything about noise, overheating, or when you're free"></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary contact-submit">Send booking request</button>
+        <div class="contact-note">Opens your email app with everything filled in — nothing sends automatically.</div>
+        <div class="form-status" id="form-status"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <div class="footer-logo">Sassy's Cleaning</div>
+    <span class="muted">DM to book · Xbox &amp; PlayStation only</span>
+    <div class="footer-links" style="display:flex; gap:16px;">
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="cookies.html">Cookie Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---- Supabase setup ----
+  const SUPABASE_URL = 'https://cwvcladlvmwmjajiavr.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_EufYUjPUHBtbH776ThU_Cg_dZuXQBBP';
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ---- Cookie consent ----
+  const COOKIE_KEY = 'sassys_cookie_consent'; // 'accepted' | 'rejected'
+  const banner = document.getElementById('cookie-banner');
+  const acceptBtn = document.getElementById('cookie-accept');
+  const rejectBtn = document.getElementById('cookie-reject');
+
+  function getConsent(){
+    return localStorage.getItem(COOKIE_KEY);
+  }
+  function setConsent(value){
+    localStorage.setItem(COOKIE_KEY, value);
+    banner.style.display = 'none';
+  }
+  if (!getConsent()) {
+    banner.style.display = 'block';
+  }
+  acceptBtn.addEventListener('click', function(){ setConsent('accepted'); });
+  rejectBtn.addEventListener('click', function(){ setConsent('rejected'); });
+
+  const consoleSelect = document.getElementById('console-select');
+  const controllerQty = document.getElementById('controller-qty');
+  const total = document.getElementById('estimate-total');
+
+  function updateTotal(){
+    const consolePrice = Number(consoleSelect.value) || 0;
+    const qty = Math.max(0, Math.min(8, Number(controllerQty.value) || 0));
+    total.textContent = '€' + (consolePrice + qty * 5);
+  }
+  consoleSelect.addEventListener('change', updateTotal);
+  controllerQty.addEventListener('input', updateTotal);
+
+  const contactForm = document.getElementById('contact-form');
+  const formStatus = document.getElementById('form-status');
+
+  contactForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+
+    const name = document.getElementById('cf-name').value;
+    const console_ = document.getElementById('cf-console').value;
+    const controllers = Math.max(0, Math.min(8, Number(document.getElementById('cf-controllers').value) || 0));
+    const contact = document.getElementById('cf-contact').value;
+    const message = document.getElementById('cf-message').value;
+
+    // Only write to the database if the visitor accepted cookies
+    if (getConsent() === 'accepted') {
+      const isEmail = contact.includes('@');
+      const { error } = await supabaseClient.from('sassys-cleaning').insert({
+        name: name,
+        email: isEmail ? contact : null,
+        phone: isEmail ? null : contact,
+        console_type: console_,
+        gaming_controllers: controllers
+      });
+      if (error) {
+        console.error('Supabase insert failed:', error);
+      }
+    }
+
+    const subject = 'Booking request — ' + console_;
+    const body =
+      'Name: ' + name + '\n' +
+      'Console: ' + console_ + '\n' +
+      'Controllers: ' + controllers + '\n' +
+      'Best contact: ' + contact + '\n' +
+      'Notes: ' + (message || '—');
+
+    const mailto = 'mailto:sassydevicecleaning@gmail.com'
+      + '?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(body);
+
+    window.location.href = mailto;
+
+    setTimeout(function(){
+      if (document.hasFocus()) {
+        formStatus.textContent =
+          'Saved! If your email app didn\'t open, just send us this: ' +
+          subject + ' — ' + body.replace(/\n/g, ' | ');
+      } else {
+        formStatus.textContent = 'Your email app should now be open with your request pre-filled — just hit send.';
+      }
+      formStatus.classList.add('show');
+    }, 1200);
+  });
+</script>
+
+</body>
+</html>
