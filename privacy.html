@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — Sassy's Cleaning</title>
+<meta name="description" content="How Sassy's Cleaning collects, uses, and protects your information when you book a console cleaning.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#14161A;
+    --surface:#1C1F26;
+    --surface-2:#22262F;
+    --line:#2C313C;
+    --hot:#FF6B35;
+    --cool:#3ADBC4;
+    --text:#EDEFF2;
+    --muted:#8B92A0;
+    --radius:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',system-ui,sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .mono{ font-family:'JetBrains Mono',monospace; }
+  a{ color:var(--cool); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+  ul{ padding-left:20px; }
+  .wrap{ max-width:820px; margin:0 auto; padding:0 24px; }
+
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(20,22,26,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 24px; max-width:1120px; margin:0 auto;
+  }
+  .logo{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:18px; }
+  .back-link{ font-size:14px; color:var(--muted); }
+  .back-link:hover{ color:var(--cool); }
+
+  .hero{ padding:64px 0 40px; border-bottom:1px solid var(--line); }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cool);
+    text-transform:uppercase; letter-spacing:0.08em; margin-bottom:16px;
+  }
+  .eyebrow::before{
+    content:''; width:6px; height:6px; border-radius:50%;
+    background:var(--cool); box-shadow:0 0 10px var(--cool);
+  }
+  .hero h1{ font-size:clamp(30px,4vw,44px); margin-bottom:14px; }
+  .hero p{ color:var(--muted); font-size:15.5px; max-width:60ch; }
+  .updated{ font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--muted); margin-top:18px; }
+
+  main{ padding:48px 0 80px; }
+  section{ margin-bottom:44px; }
+  section h2{ font-size:22px; margin-bottom:14px; }
+  section h3{ font-size:16px; margin:18px 0 8px; color:var(--text); }
+  section p, section li{ color:var(--muted); font-size:15px; }
+  section p + p{ margin-top:10px; }
+  section li{ margin-bottom:8px; }
+
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:24px 26px;
+  }
+  .card + .card{ margin-top:16px; }
+  .card h3{ margin-top:0; }
+
+  table{ width:100%; border-collapse:collapse; margin-top:12px; }
+  th, td{ text-align:left; padding:10px 12px; font-size:14px; border-bottom:1px solid var(--line); }
+  th{ font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); }
+  td{ color:var(--text); }
+
+  .contact-box{
+    background:var(--surface-2); border:1px dashed var(--line); border-radius:var(--radius);
+    padding:22px 26px; margin-top:12px;
+  }
+  .contact-box a{ display:block; margin-top:6px; }
+
+  footer{ border-top:1px solid var(--line); padding:32px 0; text-align:center; }
+  footer p{ color:var(--muted); font-size:13px; }
+
+  @media (max-width:600px){
+    table, thead, tbody, th, td, tr{ display:block; }
+    thead{ display:none; }
+    tr{ border-bottom:1px solid var(--line); padding:10px 0; }
+    td{ border:none; padding:4px 0; }
+    td::before{ content:attr(data-label); display:block; font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">Sassy's Cleaning</div>
+    <a class="back-link" href="index.html">← Back to site</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Legal</span>
+    <h1>Privacy Policy</h1>
+    <p>This page explains what information Sassy's Cleaning collects when you book a console clean, how it's used, where it's stored, and what rights you have over it.</p>
+    <div class="updated mono">Last updated: 6 August 2026</div>
+  </div>
+</section>
+
+<main class="wrap">
+
+  <section>
+    <h2>Who we are</h2>
+    <p>Sassy's Cleaning is a Dublin-based console cleaning service. This site is used to give quotes and take booking requests. For anything about this policy, contact <a href="mailto:sassydevicecleaning@gmail.com">sassydevicecleaning@gmail.com</a>.</p>
+  </section>
+
+  <section>
+    <h2>What we collect</h2>
+    <p>We only collect what's needed to arrange and confirm a booking. This is submitted directly by you through the booking form.</p>
+    <div class="card">
+      <table>
+        <thead>
+          <tr><th>Information</th><th>Why we collect it</th></tr>
+        </thead>
+        <tbody>
+          <tr><td data-label="Information">Name</td><td data-label="Why">To identify your booking and address you directly</td></tr>
+          <tr><td data-label="Information">Email or phone number</td><td data-label="Why">To confirm the booking and arrange drop-off/collection</td></tr>
+          <tr><td data-label="Information">Console type</td><td data-label="Why">To calculate the correct price and prepare the right service</td></tr>
+          <tr><td data-label="Information">Number of controllers</td><td data-label="Why">To calculate the correct add-on price</td></tr>
+          <tr><td data-label="Information">Notes you provide</td><td data-label="Why">To understand the issue with your console (noise, overheating, etc.)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:14px;">We do not collect payment details through the site — payment is arranged in person (cash or Revolut) on collection.</p>
+  </section>
+
+  <section>
+    <h2>How your information is stored</h2>
+    <div class="card">
+      <h3>Booking database</h3>
+      <p>Booking details are stored securely in a Supabase database. Your name, email, and phone number are flagged internally as sensitive fields and are only accessible to Sassy's Cleaning for the purpose of managing bookings.</p>
+    </div>
+    <div class="card">
+      <h3>Email</h3>
+      <p>When you submit the booking form, your device also opens a pre-filled email addressed to <span class="mono">sassydevicecleaning@gmail.com</span>. That email is only sent if you choose to hit send in your own email app — nothing is sent automatically on our end.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>How we use your information</h2>
+    <ul>
+      <li>To confirm your booking and agree drop-off or collection details</li>
+      <li>To contact you about your console (e.g. questions about the issue, timing)</li>
+      <li>To keep a record of past bookings for our own service history</li>
+    </ul>
+    <p>We do not use your information for marketing, and we do not sell or share it with third parties for their own purposes.</p>
+  </section>
+
+  <section>
+    <h2>Who else can see it</h2>
+    <p>Your information is only ever seen by Sassy's Cleaning. Supabase, our database provider, processes and stores the data on our behalf under their own security and hosting terms, but does not use it for anything else.</p>
+  </section>
+
+  <section>
+    <h2>How long we keep it</h2>
+    <p>Booking records are kept for as long as reasonably needed to manage past and repeat bookings. If you'd like your information deleted, just ask — see contact details below.</p>
+  </section>
+
+  <section>
+    <h2>Your rights</h2>
+    <p>As a data subject in the EU/Ireland, you can ask us at any time to:</p>
+    <ul>
+      <li>See what information we hold about you</li>
+      <li>Correct anything that's inaccurate</li>
+      <li>Delete your information from our records</li>
+    </ul>
+    <div class="contact-box">
+      <strong>To make a request, contact us:</strong>
+      <a href="mailto:sassydevicecleaning@gmail.com">sassydevicecleaning@gmail.com</a>
+      <a href="tel:+353857426962">085 742 6962</a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Cookies</h2>
+    <p>See our separate <a href="cookies.html">Cookie Policy</a> for details on any cookies used on this site.</p>
+  </section>
+
+  <section>
+    <h2>Changes to this policy</h2>
+    <p>If this policy changes, the "last updated" date at the top of this page will be revised. Continued use of the site after changes means you accept the updated policy.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Sassy's Cleaning · Dublin · <a href="mailto:sassydevicecleaning@gmail.com">sassydevicecleaning@gmail.com</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
